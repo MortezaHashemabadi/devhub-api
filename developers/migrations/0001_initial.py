@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('bio', models.TextField(blank=True)),
                 ('skills', models.CharField(blank=True, max_length=255)),
-                ('github', models.URLField(blank=True)),
+                ('.github', models.URLField(blank=True)),
                 ('linkedin', models.URLField(blank=True)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
