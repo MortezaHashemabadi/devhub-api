@@ -1,4 +1,4 @@
-name: DevHub CI
+name: DevHub CI (Dockerized)
 
 on:
   push:
@@ -7,28 +7,23 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-django
+      - name: Build Docker image
+        run: docker build -t devhub-api .
 
-      - name: Run migrations
+      - name: Run container and test
         run: |
-          python manage.py migrate
-
-      - name: Run tests
-        run: |
-          pytest -v
+          docker run --rm \
+            -e DJANGO_SETTINGS_MODULE=devhub_api.settings \
+            -e DEBUG=True \
+            devhub-api \
+            sh -c "pytest -v"
